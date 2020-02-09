@@ -1,0 +1,29 @@
+version: v1.0
+name: Node JS
+agent:
+  machine:
+    type: e1-standard-2
+    os_image: ubuntu1804
+blocks:
+  - name: Install dependencies
+    task:
+      jobs:
+        - name: yarn
+          commands:
+            - sem-version node 10
+            - checkout
+            - cache restore
+            - echo "Installing dependencies..."
+            - yarn
+            - cache store
+  - name: Unit tests
+    task:
+      prologue:
+        commands:
+          - checkout
+          - cache restore
+      jobs:
+        - name: yarn test
+          commands:
+            - echo "Running unit tests..."
+            - yarn test
